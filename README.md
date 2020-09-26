@@ -1,4 +1,4 @@
-# keras-yolo4
+# YOLOv4-CoreML-Converter
 
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
 
