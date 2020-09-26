@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 """
 Reads Darknet config and weights and creates CoreML model. 
-The intermdiate Keras model with TF backend can also be exported.
+The intermediate Keras model with TF backend can also be exported.
 
 """
 
