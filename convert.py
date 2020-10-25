@@ -38,6 +38,10 @@ parser.add_argument(
     '-k',
     '--keras_output_path',
     help='Save also as model file.')
+parser.add_argument(
+    '-i',
+    '--input_resolution',
+    help='Input resolution of Darknet model')
 
 
 class Mish(Layer):
@@ -123,7 +127,8 @@ def _main(args):
     cfg_parser.read_file(unique_config_file)
 
     print('Creating Keras model.')
-    input_layer = Input(shape=(416, 416, 3))
+    input_layer = Input(
+        shape=(int(args.input_resolution), int(args.input_resolution), 3))
     prev_layer = input_layer
     all_layers = []
 
@@ -287,6 +292,14 @@ def _main(args):
     coreml_model = ct.convert(model, inputs=[ct.ImageType(scale=1 / 255.0)])
     coreml_model.save(args.output_path)
     print('Saved CoreML model to {}'.format(output_path))
+
+    print("\nLayers in the converted model:")
+    for i, layer in enumerate(coreml_model._spec.neuralNetwork.layers):
+        if layer.HasField("custom"):
+            print("Layer %d = %s --> custom layer = %s" %
+                  (i, layer.name, layer.custom.className))
+        else:
+            print("Layer %d = %s" % (i, layer.name))
 
     # Check to see if all weights have been read.
     remaining_weights = len(weights_file.read()) / 4
